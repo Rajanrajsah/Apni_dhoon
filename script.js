@@ -1,31 +1,32 @@
-const keys = document.querySelectorAll('.key');
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playNote(keyElement) {
-    const keyLabel = keyElement.getAttribute('data-key');
-    
-    // Visual Feedback
     keyElement.classList.add('active');
     setTimeout(() => keyElement.classList.remove('active'), 150);
 
-    // Audio Logic
-    // Make sure you have audio files named A.mp3, W.mp3, etc. in a 'sounds' folder
-    const audio = new Audio(`sounds/${keyLabel}.mp3`);
-    audio.currentTime = 0;
-    audio.play().catch(e => console.log("Audio play blocked until user interacts."));
+    // This creates a "Crazy" electronic piano sound without needing MP3 files!
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'triangle'; // Piano-like soft tone
+    
+    // Map of keys to Frequencies (Hz)
+    const frequencies = {
+        'A': 261.6, 'W': 277.2, 'S': 293.7, 'E': 311.1, 'D': 329.6,
+        'F': 349.2, 'T': 370.0, 'G': 392.0, 'Y': 415.3, 'H': 440.0,
+        'U': 466.2, 'J': 493.9
+    };
+
+    const keyLabel = keyElement.getAttribute('data-key');
+    oscillator.frequency.setValueAtTime(frequencies[keyLabel], audioCtx.currentTime);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    // Fade out effect (Professional touch)
+    gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.5);
 }
-
-// 💻 Desktop Keyboard Support
-window.addEventListener('keydown', (e) => {
-    const code = e.key.toUpperCase();
-    const key = document.querySelector(`.key[data-key="${code}"]`);
-    if (key) playNote(key);
-});
-
-// 📱 Mobile & Mouse Support
-keys.forEach(key => {
-    // 'pointerdown' triggers immediately on touch or click
-    key.addEventListener('pointerdown', (e) => {
-        e.preventDefault(); // Prevents double-triggering
-        playNote(key);
-    });
-});
