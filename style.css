@@ -1,40 +1,56 @@
+* { box-sizing: border-box; touch-action: manipulation; }
+
 body {
-    background: #0f0f0f;
-    color: #fff;
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
+    background: #0a0a0a;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-h1 span { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
+h1 span { color: #00f2fe; text-shadow: 0 0 15px #00f2fe; }
+
+/* Mobile-Friendly Piano Wrapper */
+.piano-wrapper {
+    width: 100%;
+    overflow-x: auto; /* Allows swiping on small screens */
+    padding: 20px 10px;
+    -webkit-overflow-scrolling: touch;
+}
 
 .piano {
     display: flex;
-    justify-content: center;
-    padding: 50px;
+    justify-content: flex-start;
+    min-width: 600px; /* Ensures keys stay wide enough for fingers */
+    margin: 0 auto;
 }
 
 .key {
-    border: 2px solid #222;
-    border-radius: 0 0 5px 5px;
+    position: relative;
+    border: 1px solid #000;
+    border-radius: 0 0 8px 8px;
     cursor: pointer;
-    transition: all 0.07s ease;
+    user-select: none;
     display: flex;
-    align-items: flex-end;
     justify-content: center;
-    padding-bottom: 10px;
+    align-items: flex-end;
+    padding-bottom: 15px;
+    font-weight: bold;
 }
 
 .white {
     width: 60px;
-    height: 200px;
-    background: white;
+    height: 220px;
+    background: linear-gradient(to bottom, #eee 0%, #fff 100%);
     color: #333;
     z-index: 1;
 }
 
 .black {
     width: 40px;
-    height: 120px;
+    height: 130px;
     background: #222;
     color: white;
     margin-left: -20px;
@@ -42,23 +58,24 @@ h1 span { color: #00ffcc; text-shadow: 0 0 10px #00ffcc; }
     z-index: 2;
 }
 
-.key.playing {
-    transform: scale(0.95);
-    background: #00ffcc;
-    box-shadow: 0 0 20px #00ffcc;
+/* Playing Animation */
+.key.active {
+    background: #00f2fe;
+    transform: translateY(4px);
+    box-shadow: 0 0 25px #00f2fe;
 }
 
 .song-guide {
     display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 20px;
 }
 
 .song-card {
-    background: #1a1a1a;
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 4px solid #00ffcc;
+    background: #111;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    min-width: 150px;
 }
-
