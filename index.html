@@ -3,168 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Key-Vibe Pro | Master Music Site</title>
+    <title>Key-Vibe Pro | Full Chorus Agent</title>
     <style>
-        :root { 
-            --neon: #00f2fe; 
-            --accent: #7000ff;
-            --bg: #050505; 
-            --card-bg: #111;
-        }
+        :root { --neon: #00f2fe; --bg: #050505; --card: #111; --accent: #ff007a; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; overflow-x: hidden; }
         
-        body { 
-            background: var(--bg); 
-            color: white; 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            margin: 0; 
-            text-align: center; 
-            overflow-x: hidden;
-        }
+        header { padding: 20px; background: #000; border-bottom: 2px solid #222; position: sticky; top: 0; z-index: 100; }
+        .status { font-family: monospace; color: var(--neon); letter-spacing: 2px; font-size: 12px; margin-bottom: 5px; }
 
-        /* Top Header */
-        header { 
-            padding: 30px; 
-            background: linear-gradient(to bottom, #111, var(--bg)); 
-            border-bottom: 1px solid #222;
-        }
-        .status-bar { 
-            font-family: 'Courier New', monospace; 
-            color: var(--neon); 
-            font-size: 14px; 
-            letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-
-        /* Real-time Lyric HUD */
-        #lyric-display {
+        #lyric-hud {
             height: 100px;
             font-size: 2.5rem;
-            font-weight: 800;
+            font-weight: 900;
             color: white;
             text-shadow: 0 0 20px var(--neon);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 10px 0;
-            transition: all 0.2s;
+            text-transform: uppercase;
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            margin: 10px 20px;
         }
 
-        /* Piano UI */
-        .piano-wrapper { 
-            width: 100%; 
-            overflow-x: auto; 
-            padding: 20px 0; 
-            display: flex; 
-            justify-content: center;
-            -webkit-overflow-scrolling: touch;
-        }
-        .piano { display: flex; position: relative; padding: 10px; }
-        .key { 
-            border-radius: 0 0 10px 10px; 
-            cursor: pointer; 
-            user-select: none; 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-end; 
-            padding-bottom: 20px; 
-            font-weight: bold; 
-            transition: 0.1s transform, 0.1s background;
-            border: 1px solid #000;
-        }
-        .white { 
-            width: 60px; 
-            height: 220px; 
-            background: linear-gradient(to bottom, #fff 0%, #ddd 100%); 
-            color: #333; 
-            z-index: 1; 
-        }
-        .black { 
-            width: 38px; 
-            height: 130px; 
-            background: #222; 
-            color: white; 
-            margin-left: -19px; 
-            margin-right: -19px; 
-            z-index: 2; 
-        }
-        .key.active { 
-            background: var(--neon) !important; 
-            transform: translateY(8px); 
-            box-shadow: 0 0 30px var(--neon); 
-        }
+        /* Piano */
+        .piano-wrapper { width: 100%; overflow-x: auto; padding: 20px 0; display: flex; justify-content: center; }
+        .piano { display: flex; position: relative; }
+        .key { border-radius: 0 0 8px 8px; cursor: pointer; user-select: none; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; border: 1px solid #000; transition: 0.1s; font-size: 12px; }
+        .white { width: 50px; height: 180px; background: white; color: #333; z-index: 1; }
+        .black { width: 32px; height: 110px; background: #222; color: white; margin-left: -16px; margin-right: -16px; z-index: 2; }
+        .key.active { background: var(--neon) !important; transform: translateY(5px); box-shadow: 0 0 20px var(--neon); }
 
-        /* Song Dashboard Grid */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        .section-card {
-            background: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: left;
-            transition: 0.3s;
-        }
-        .section-card:hover { border-color: var(--neon); }
-        .section-card h3 { color: var(--neon); margin: 0 0 10px 0; font-size: 1.4rem; }
-        .lyric-preview { font-size: 0.9rem; color: #888; margin-bottom: 20px; line-height: 1.5; font-style: italic; }
+        /* Dashboard */
+        .main-container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .song-section { background: var(--card); border: 1px solid #333; border-radius: 15px; padding: 20px; text-align: left; display: flex; flex-direction: column; transition: 0.3s; }
+        .song-section:hover { border-color: var(--neon); }
+        .song-section h3 { color: var(--neon); margin-top: 0; font-size: 1.5rem; }
         
-        .agent-btn {
-            background: var(--neon);
-            color: black;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1rem;
-            transition: 0.2s;
-        }
-        .agent-btn:hover { background: white; box-shadow: 0 0 15px white; }
+        .full-lyrics-box { font-size: 0.8rem; color: #999; line-height: 1.6; margin-bottom: 15px; padding: 10px; background: #000; border-radius: 8px; height: 120px; overflow-y: auto; border-left: 3px solid var(--accent); }
+        
+        button.play-btn { background: var(--neon); color: black; border: none; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; text-transform: uppercase; }
+        button:disabled { background: #333; color: #666; cursor: not-allowed; }
 
-        /* Initial Setup Overlay */
-        #setup-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: var(--bg); 
-            z-index: 9999; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-        }
-        #setup-overlay button { 
-            padding: 25px 60px; 
-            font-size: 24px; 
-            background: var(--neon); 
-            border: none; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-weight: bold;
-            box-shadow: 0 0 40px var(--neon);
-        }
-
-        /* Instructions */
-        .instructions { color: #555; font-size: 0.8rem; margin-top: 40px; }
+        #boot-overlay { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #boot-overlay button { padding: 20px 60px; font-size: 22px; background: var(--neon); border: none; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 30px var(--neon); }
     </style>
 </head>
 <body>
 
-    <div id="setup-overlay">
-        <h1 style="color: var(--neon); margin-bottom: 30px;">KEY-VIBE PRO : ENGINE v2</h1>
-        <button onclick="bootSystem()">BOOT SYSTEM</button>
-        <p style="margin-top: 20px; color: #666;">Optimized for Desktop & Mobile</p>
+    <div id="boot-overlay">
+        <h1 style="color: var(--neon); letter-spacing: 5px;">KEY-VIBE PRO</h1>
+        <button onclick="init()">INITIALIZE SYSTEM</button>
     </div>
 
     <header>
-        <div class="status-bar" id="status-text">SYSTEM: IDLE</div>
-        <div id="lyric-display">TAP START</div>
+        <div class="status" id="status-text">SYSTEM: ONLINE</div>
+        <div id="lyric-hud">READY TO PERFORM</div>
     </header>
 
     <div class="piano-wrapper">
@@ -184,120 +78,129 @@
         </div>
     </div>
 
-    <div class="dashboard">
-        <div class="section-card">
-            <h3>❤️ KESARIYA</h3>
-            <div class="lyric-preview">"Kesariya tera ishq hai piya, rang jaun jo main hath lagaun..."</div>
-            <button class="agent-btn" onclick="agentSequence('KESARIYA')">AGENT: PLAY & SYNC</button>
+    <div class="main-container">
+        <div class="song-section">
+            <h3>KESARIYA</h3>
+            <div class="full-lyrics-box">
+                Kesariya tera ishq hai piya<br>Rang jaun jo main hath lagaun<br>
+                Din beete saara teri fikr mein<br>Rain saari teri khair manaun<br>
+                Kesariya tera ishq hai piya...
+            </div>
+            <button class="play-btn" id="btn-KESARIYA" onclick="startAgent('KESARIYA')">Play Full Chorus</button>
         </div>
 
-        <div class="section-card">
-            <h3>💔 TUM HI HO</h3>
-            <div class="lyric-preview">"Hum tere bin ab reh nahi sakte, tere bina kya wajood mera..."</div>
-            <button class="agent-btn" onclick="agentSequence('TUMHIHO')">AGENT: PLAY & SYNC</button>
+        <div class="song-section">
+            <h3>TUM HI HO</h3>
+            <div class="full-lyrics-box">
+                Hum tere bin ab reh nahi sakte<br>Tere bina kya wajood mera<br>
+                Hum tere bin ab reh nahi sakte<br>Tere bina kya wajood mera<br>
+                Tujhse juda agar ho jayenge<br>Toh khud se hi ho jayenge juda
+            </div>
+            <button class="play-btn" id="btn-TUMHIHO" onclick="startAgent('TUMHIHO')">Play Full Chorus</button>
         </div>
 
-        <div class="section-card">
-            <h3>✨ PEE LOON</h3>
-            <div class="lyric-preview">"Pee loon tere neele neele naino se shabnam, pee loon..."</div>
-            <button class="agent-btn" onclick="agentSequence('PEELOON')">AGENT: PLAY & SYNC</button>
+        <div class="song-section">
+            <h3>PEE LOON</h3>
+            <div class="full-lyrics-box">
+                Pee loon tere neele neele naino se shabnam<br>Pee loon tere geele geele honton ki sargam<br>
+                Pee loon hai peene ka mausam<br>Tere sang ishq-e-tari hai<br>Tere sang ek khumari hai
+            </div>
+            <button class="play-btn" id="btn-PEELOON" onclick="startAgent('PEELOON')">Play Full Chorus</button>
         </div>
 
-        <div class="section-card">
-            <h3>🕶️ KALA CHASHMA</h3>
-            <div class="lyric-preview">"Tere mukhde pe kala chashma, jachta hai gore mukhde pe..."</div>
-            <button class="agent-btn" onclick="agentSequence('KALA')">AGENT: PLAY & SYNC</button>
+        <div class="song-section">
+            <h3>KALA CHASHMA</h3>
+            <div class="full-lyrics-box">
+                Tere mukhde pe kala chashma<br>Jachta hai gore mukhde pe kala chashma<br>
+                O tenu kala chashma jachta ae<br>Jachta ae gore mukhde pe<br>Kala kala kala kala kala...
+            </div>
+            <button class="play-btn" id="btn-KALA" onclick="startAgent('KALA')">Play Full Chorus</button>
         </div>
-    </div>
-
-    <div class="instructions">
-        MANUAL PLAY: [A W S E D F T G Y H U J] | WORKS ON TOUCH SCREENS
     </div>
 
     <script>
-        let audioCtx;
-        const freqs = {"A":261.63, "W":277.18, "S":293.66, "E":311.13, "D":329.63, "F":349.23, "T":369.99, "G":392.00, "Y":415.30, "H":440.00, "U":466.16, "J":493.88};
+        let ctx;
+        const noteFreqs = {"A":261.6,"W":277.2,"S":293.7,"E":311.1,"D":329.6,"F":349.2,"T":370.0,"G":392.0,"Y":415.3,"H":440.0,"U":466.2,"J":493.9};
         
-        // Song Library with Note-to-Lyric Mapping
-        const songs = {
+        // --- FULL A TO Z CHORUS DATA ---
+        const library = {
             'KESARIYA': [
-                {n:'A', t:'KE-'}, {n:'S', t:'SA-'}, {n:'D', t:'RI-'}, {n:'F', t:'YA...'},
-                {n:'G', t:'TERA'}, {n:'F', t:'ISHQ'}, {n:'D', t:'HAI'}, {n:'S', t:'PIYA'}
+                {n:'A',t:'KE-'},{n:'S',t:'SA-'},{n:'D',t:'RI-'},{n:'F',t:'YA...'},{n:'G',t:'TERA'},{n:'F',t:'ISHQ'},{n:'D',t:'HAI'},{n:'S',t:'PIYA'},
+                {n:'A',t:'RANG'},{n:'S',t:'JAUN'},{n:'D',t:'JO'},{n:'F',t:'MAIN'},{n:'G',t:'HATH'},{n:'F',t:'LA-'},{n:'D',t:'GA-'},{n:'S',t:'UN'},
+                {n:'A',t:'DIN'},{n:'S',t:'BEE-'},{n:'D',t:'TE'},{n:'F',t:'SAA-'},{n:'G',t:'RA'},{n:'F',t:'TERI'},{n:'D',t:'FI-'},{n:'S',t:'KR'},
+                {n:'A',t:'RAIN'},{n:'S',t:'SAA-'},{n:'D',t:'RI'},{n:'F',t:'TE-'},{n:'G',t:'RI'},{n:'F',t:'KHAIR'},{n:'D',t:'MA-'},{n:'S',t:'NAUN'}
             ],
             'TUMHIHO': [
-                {n:'D', t:'HUM'}, {n:'E', t:'TERE'}, {n:'F', t:'BIN'}, {n:'E', t:'AB'},
-                {n:'D', t:'REH'}, {n:'S', t:'NAHI'}, {n:'A', t:'SAKTE'}
+                {n:'D',t:'HUM'},{n:'E',t:'TE-'},{n:'F',t:'RE'},{n:'E',t:'BIN'},{n:'D',t:'AB'},{n:'S',t:'REH'},{n:'A',t:'NA-HI'},{n:'S',t:'SAK-TE'},
+                {n:'D',t:'TE-'},{n:'E',t:'RE'},{n:'F',t:'BI-'},{n:'E',t:'NA'},{n:'D',t:'KYA'},{n:'S',t:'WA-'},{n:'A',t:'JOOD'},{n:'D',t:'ME-RA'},
+                {n:'F',t:'TUJH-'},{n:'G',t:'SE'},{n:'H',t:'JU-'},{n:'G',t:'DA'},{n:'F',t:'A-'},{n:'G',t:'GAR'},{n:'H',t:'HO'},{n:'G',t:'JA-'},{n:'F',t:'YEN-GE'},
+                {n:'D',t:'TOH'},{n:'S',t:'KHUD'},{n:'A',t:'SE'},{n:'D',t:'HI'},{n:'E',t:'HO'},{n:'F',t:'JA-'},{n:'E',t:'YEN-GE'},{n:'D',t:'JU-DA'}
             ],
             'PEELOON': [
-                {n:'G', t:'PEE'}, {n:'G', t:'LOON'}, {n:'F', t:'TERE'}, {n:'G', t:'NEE-'},
-                {n:'H', t:'LE'}, {n:'G', t:'NEE-'}, {n:'F', t:'LE'}
+                {n:'G',t:'PEE'},{n:'G',t:'LOON'},{n:'F',t:'TE-RE'},{n:'G',t:'NEE-LE'},{n:'H',t:'NEE-LE'},{n:'G',t:'NAI-'},{n:'F',t:'NO'},{n:'D',t:'SE'},
+                {n:'G',t:'PEE'},{n:'G',t:'LOON'},{n:'F',t:'TE-RE'},{n:'G',t:'GEE-LE'},{n:'H',t:'GEE-LE'},{n:'G',t:'HON-'},{n:'F',t:'TON'},{n:'D',t:'KI'},
+                {n:'G',t:'PEE'},{n:'G',t:'LOON'},{n:'F',t:'HAI'},{n:'G',t:'PEE-'},{n:'H',t:'NE'},{n:'G',t:'KA'},{n:'F',t:'MAU-'},{n:'D',t:'SAM'}
             ],
             'KALA': [
-                {n:'A', t:'KA-'}, {n:'A', t:'LA'}, {n:'S', t:'CHASH-'}, {n:'S', t:'MA'},
-                {n:'A', t:'JACH-'}, {n:'A', t:'TA'}, {n:'W', t:'AE!'}
+                {n:'A',t:'TE-RE'},{n:'A',t:'MUKH-'},{n:'S',t:'DE'},{n:'S',t:'PE'},{n:'A',t:'KA-LA'},{n:'A',t:'CHASH-'},{n:'W',t:'MA'},
+                {n:'A',t:'JACH-'},{n:'A',t:'TA'},{n:'S',t:'HAI'},{n:'S',t:'GO-RE'},{n:'A',t:'MUKH-'},{n:'A',t:'DE'},{n:'S',t:'PE'},
+                {n:'A',t:'KA-LA'},{n:'A',t:'KA-LA'},{n:'A',t:'KA-LA'},{n:'A',t:'KA-LA'},{n:'A',t:'KA-LA...'}
             ]
         };
 
-        function bootSystem() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            document.getElementById('setup-overlay').style.display = 'none';
-            document.getElementById('lyric-display').innerText = "SYSTEM ACTIVE";
+        function init() {
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            document.getElementById('boot-overlay').style.display = 'none';
         }
 
-        function triggerNote(note, dur = 0.8) {
-            if(!audioCtx || !freqs[note]) return;
-            
-            const el = document.getElementById('key-' + note);
+        function trigger(n, d=0.8) {
+            if(!ctx || !noteFreqs[n]) return;
+            const el = document.getElementById('key-'+n);
             el.classList.add('active');
-            setTimeout(() => el.classList.remove('active'), 200);
+            setTimeout(()=>el.classList.remove('active'),200);
 
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            osc.type = 'triangle'; 
-            osc.frequency.setValueAtTime(freqs[note], audioCtx.currentTime);
-            
-            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur);
-            
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            osc.start();
-            osc.stop(audioCtx.currentTime + dur);
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.setValueAtTime(noteFreqs[n], ctx.currentTime);
+            g.gain.setValueAtTime(0.4, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + d);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(); o.stop(ctx.currentTime + d);
         }
 
-        async function agentSequence(songKey) {
+        async function startAgent(songKey) {
+            const btns = document.querySelectorAll('.play-btn');
+            const hud = document.getElementById('lyric-hud');
             const status = document.getElementById('status-text');
-            const display = document.getElementById('lyric-display');
-            const sequence = songs[songKey];
             
-            status.innerText = `AGENT: PLAYING ${songKey}`;
+            btns.forEach(b => b.disabled = true);
+            status.innerText = "AGENT: PERFORMING CHORUS...";
             
-            for (const step of sequence) {
-                display.innerText = step.t;
-                display.style.transform = "scale(1.2)";
-                triggerNote(step.n, 1.0);
-                
-                await new Promise(r => setTimeout(r, 500));
-                display.style.transform = "scale(1.0)";
+            for(let step of library[songKey]) {
+                hud.innerText = step.t;
+                trigger(step.n, 1.2);
+                // The delay makes it feel like real singing rhythm
+                await new Promise(r => setTimeout(r, 550)); 
             }
             
-            status.innerText = "SYSTEM: IDLE";
-            setTimeout(() => { display.innerText = "YOUR TURN"; }, 1000);
+            hud.innerText = "MISSION COMPLETE";
+            status.innerText = "SYSTEM: ONLINE";
+            btns.forEach(b => b.disabled = false);
+            setTimeout(()=> { if(hud.innerText === "MISSION COMPLETE") hud.innerText = "SELECT A TRACK"; }, 2000);
         }
 
-        // Keyboard support
-        window.addEventListener('keydown', (e) => {
-            const key = e.key.toUpperCase();
-            if(freqs[key]) triggerNote(key);
+        // Keyboard Support
+        window.addEventListener('keydown', (e)=> {
+            const k = e.key.toUpperCase();
+            if(noteFreqs[k]) trigger(k);
         });
 
-        // Touch/Mouse support
+        // Touch/Mouse Support
         document.querySelectorAll('.key').forEach(k => {
-            k.addEventListener('pointerdown', (e) => {
+            k.addEventListener('pointerdown', (e)=>{
                 e.preventDefault();
-                triggerNote(k.getAttribute('data-key'));
+                trigger(k.getAttribute('data-key'));
             });
         });
     </script>
