@@ -3,35 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Key-Vibe Pro | All-In-One</title>
+    <title>Key-Vibe Pro | Auto-Agent Edition</title>
     <style>
-        /* CSS STYLES */
-        body { background: #0f0f0f; color: white; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; }
-        h1 { color: #00f2fe; margin-top: 20px; }
-        .piano-wrapper { width: 100%; overflow-x: auto; padding: 50px 10px; display: flex; justify-content: center; }
+        :root { --neon: #00f2fe; --bg: #0a0a0a; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; text-align: center; }
+        
+        /* Header & Agent Status */
+        header { padding: 20px; background: #111; border-bottom: 2px solid #222; }
+        .status-bar { color: var(--neon); font-family: monospace; margin-bottom: 10px; height: 20px; }
+        
+        /* Piano Styling */
+        .piano-wrapper { width: 100%; overflow-x: auto; padding: 40px 10px; display: flex; justify-content: center; }
         .piano { display: flex; position: relative; }
-        .key { border: 1px solid #000; border-radius: 0 0 8px 8px; cursor: pointer; user-select: none; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; font-weight: bold; transition: background 0.1s; }
-        .white { width: 55px; height: 200px; background: white; color: #333; z-index: 1; }
-        .black { width: 35px; height: 120px; background: #222; color: white; margin-left: -17.5px; margin-right: -17.5px; z-index: 2; }
-        .key.active { background: #00f2fe !important; transform: translateY(5px); box-shadow: 0 0 20px #00f2fe; }
-        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        button { padding: 20px 50px; font-size: 22px; background: #00f2fe; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px #00f2fe; }
-        .guide { margin-top: 20px; color: #888; }
+        .key { border: 1px solid #000; border-radius: 0 0 8px 8px; cursor: pointer; user-select: none; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; font-weight: bold; transition: 0.1s; }
+        .white { width: 50px; height: 180px; background: white; color: #333; z-index: 1; }
+        .black { width: 30px; height: 110px; background: #222; color: white; margin-left: -15px; margin-right: -15px; z-index: 2; }
+        .key.active { background: var(--neon) !important; transform: translateY(5px); box-shadow: 0 0 20px var(--neon); }
+        
+        /* Song Sections */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; padding: 20px; max-width: 1000px; margin: 0 auto; }
+        .song-card { background: #1a1a1a; padding: 15px; border-radius: 10px; border: 1px solid #333; position: relative; }
+        .song-card h3 { margin-top: 0; font-size: 1.1rem; color: var(--neon); }
+        .play-btn { background: var(--neon); border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
+        
+        /* Overlay */
+        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #overlay button { padding: 20px 60px; font-size: 24px; background: var(--neon); border: none; border-radius: 50px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div id="overlay">
         <h1>KEY-VIBE PRO</h1>
-        <button onclick="startApp()">START MUSIC</button>
-        <p class="guide">Tap to enable audio & play like crazy</p>
+        <button onclick="startApp()">BOOT AGENT</button>
     </div>
 
-    <h1>KEY-VIBE</h1>
-    <p>Kesariya: A - S - D - F - G - F - D - S</p>
+    <header>
+        <div class="status-bar" id="agent-status">AGENT: STANDBY...</div>
+        <h1>KEY-VIBE <small style="font-size: 12px; opacity: 0.5;">v2.0</small></h1>
+    </header>
 
     <div class="piano-wrapper">
-        <div class="piano">
+        <div class="piano" id="main-piano">
             <div id="key-A" data-key="A" class="key white">A</div>
             <div id="key-W" data-key="W" class="key black">W</div>
             <div id="key-S" data-key="S" class="key white">S</div>
@@ -47,51 +60,84 @@
         </div>
     </div>
 
+    <div class="dashboard">
+        <div class="song-card">
+            <h3>❤️ Kesariya</h3>
+            <p>A - S - D - F - G - F - D - S</p>
+            <button class="play-btn" onclick="agentPlay('KESARIYA')">AGENT PLAY</button>
+        </div>
+        <div class="song-card">
+            <h3>😢 Tum Hi Ho</h3>
+            <p>D - E - F - E - D - S - A</p>
+            <button class="play-btn" onclick="agentPlay('TUMHIHO')">AGENT PLAY</button>
+        </div>
+        <div class="song-card">
+            <h3>🔥 Kala Chashma</h3>
+            <p>A - A - S - S - A - A - W</p>
+            <button class="play-btn" onclick="agentPlay('KALA')">AGENT PLAY</button>
+        </div>
+        <div class="song-card">
+            <h3>✨ Pee Loon</h3>
+            <p>G - G - F - G - H - G - F - D</p>
+            <button class="play-btn" onclick="agentPlay('PEELOON')">AGENT PLAY</button>
+        </div>
+    </div>
+
     <script>
-        // JAVASCRIPT LOGIC
         let context;
         const freqs = {"A":261.6, "W":277.2, "S":293.7, "E":311.1, "D":329.6, "F":349.2, "T":370.0, "G":392.0, "Y":415.3, "H":440.0, "U":466.2, "J":493.9};
+        
+        const scripts = {
+            'KESARIYA': ['A', 'S', 'D', 'F', 'G', 'F', 'D', 'S'],
+            'TUMHIHO': ['D', 'E', 'F', 'E', 'D', 'S', 'A'],
+            'KALA': ['A', 'A', 'S', 'S', 'A', 'A', 'W'],
+            'PEELOON': ['G', 'G', 'F', 'G', 'H', 'G', 'F', 'D']
+        };
 
         function startApp() {
             context = new (window.AudioContext || window.webkitAudioContext)();
             document.getElementById('overlay').style.display = 'none';
         }
 
-        function play(id) {
-            if(!context) return;
+        function playNote(id, duration = 0.5) {
+            if(!context || !freqs[id]) return;
             const keyEl = document.getElementById('key-' + id);
-            if(!keyEl) return;
-
-            // Visual feedback
             keyEl.classList.add('active');
-            setTimeout(() => keyEl.classList.remove('active'), 150);
+            setTimeout(() => keyEl.classList.remove('active'), 200);
 
-            // Audio synth
             const osc = context.createOscillator();
             const amp = context.createGain();
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(freqs[id], context.currentTime);
-            
-            amp.gain.setValueAtTime(0.5, context.currentTime);
-            amp.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.8);
-
+            amp.gain.setValueAtTime(0.4, context.currentTime);
+            amp.gain.exponentialRampToValueAtTime(0.001, context.currentTime + duration);
             osc.connect(amp);
             amp.connect(context.destination);
             osc.start();
-            osc.stop(context.currentTime + 0.8);
+            osc.stop(context.currentTime + duration);
         }
 
-        // Keyboard Listener
-        window.addEventListener('keydown', (e) => {
-            const key = e.key.toUpperCase();
-            if(freqs[key]) play(key);
-        });
+        // The Agent Logic
+        async function agentPlay(songKey) {
+            const status = document.getElementById('agent-status');
+            const notes = scripts[songKey];
+            status.innerText = `AGENT: PLAYING ${songKey}...`;
+            
+            for (let note of notes) {
+                playNote(note, 0.8);
+                await new Promise(r => setTimeout(r, 400)); // Delay between notes
+            }
+            
+            status.innerText = "AGENT: MISSION ACCOMPLISHED";
+            setTimeout(() => status.innerText = "AGENT: STANDBY...", 2000);
+        }
 
-        // Touch/Mouse Listener
+        // Manual Listeners
+        window.addEventListener('keydown', (e) => playNote(e.key.toUpperCase()));
         document.querySelectorAll('.key').forEach(k => {
             k.addEventListener('pointerdown', (e) => {
                 e.preventDefault();
-                play(k.getAttribute('data-key'));
+                playNote(k.getAttribute('data-key'));
             });
         });
     </script>
