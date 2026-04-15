@@ -3,50 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Key-Vibe Mobile | Hindi Piano</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Key-Vibe Pro | All-In-One</title>
+    <style>
+        /* CSS STYLES */
+        body { background: #0f0f0f; color: white; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; }
+        h1 { color: #00f2fe; margin-top: 20px; }
+        .piano-wrapper { width: 100%; overflow-x: auto; padding: 50px 10px; display: flex; justify-content: center; }
+        .piano { display: flex; position: relative; }
+        .key { border: 1px solid #000; border-radius: 0 0 8px 8px; cursor: pointer; user-select: none; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; font-weight: bold; transition: background 0.1s; }
+        .white { width: 55px; height: 200px; background: white; color: #333; z-index: 1; }
+        .black { width: 35px; height: 120px; background: #222; color: white; margin-left: -17.5px; margin-right: -17.5px; z-index: 2; }
+        .key.active { background: #00f2fe !important; transform: translateY(5px); box-shadow: 0 0 20px #00f2fe; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        button { padding: 20px 50px; font-size: 22px; background: #00f2fe; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 0 15px #00f2fe; }
+        .guide { margin-top: 20px; color: #888; }
+    </style>
 </head>
 <body>
 
-    <div id="start-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:999; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-    <h1 style="color:#00f2fe;">KEY-VIBE PRO</h1>
-    <button id="start-btn" style="padding:20px 40px; font-size:20px; cursor:pointer; background:#00f2fe; border:none; border-radius:10px; font-weight:bold;">START PLAYING</button>
-    <p style="margin-top:20px;">Tap to enable sound on your device</p>
+    <div id="overlay">
+        <h1>KEY-VIBE PRO</h1>
+        <button onclick="startApp()">START MUSIC</button>
+        <p class="guide">Tap to enable audio & play like crazy</p>
     </div>
-    
-    <header>
-        <h1>KEY-VIBE <span>// PRO</span></h1>
-        <p>Tap keys or use your computer keyboard.</p>
-    </header>
+
+    <h1>KEY-VIBE</h1>
+    <p>Kesariya: A - S - D - F - G - F - D - S</p>
 
     <div class="piano-wrapper">
         <div class="piano">
-            <div data-key="A" class="key white"><span>A</span></div>
-            <div data-key="W" class="key black"><span>W</span></div>
-            <div data-key="S" class="key white"><span>S</span></div>
-            <div data-key="E" class="key black"><span>E</span></div>
-            <div data-key="D" class="key white"><span>D</span></div>
-            <div data-key="F" class="key white"><span>F</span></div>
-            <div data-key="T" class="key black"><span>T</span></div>
-            <div data-key="G" class="key white"><span>G</span></div>
-            <div data-key="Y" class="key black"><span>Y</span></div>
-            <div data-key="H" class="key white"><span>H</span></div>
-            <div data-key="U" class="key black"><span>U</span></div>
-            <div data-key="J" class="key white"><span>J</span></div>
+            <div id="key-A" data-key="A" class="key white">A</div>
+            <div id="key-W" data-key="W" class="key black">W</div>
+            <div id="key-S" data-key="S" class="key white">S</div>
+            <div id="key-E" data-key="E" class="key black">E</div>
+            <div id="key-D" data-key="D" class="key white">D</div>
+            <div id="key-F" data-key="F" class="key white">F</div>
+            <div id="key-T" data-key="T" class="key black">T</div>
+            <div id="key-G" data-key="G" class="key white">G</div>
+            <div id="key-Y" data-key="Y" class="key black">Y</div>
+            <div id="key-H" data-key="H" class="key white">H</div>
+            <div id="key-U" data-key="U" class="key black">U</div>
+            <div id="key-J" data-key="J" class="key white">J</div>
         </div>
     </div>
 
-    <section class="song-guide">
-        <div class="song-card">
-            <h3>Kesariya</h3>
-            <code>A-S-D-F-G-F-D-S</code>
-        </div>
-        <div class="song-card">
-            <h3>Tum Hi Ho</h3>
-            <code>D-E-F-E-D-S-A</code>
-        </div>
-    </section>
+    <script>
+        // JAVASCRIPT LOGIC
+        let context;
+        const freqs = {"A":261.6, "W":277.2, "S":293.7, "E":311.1, "D":329.6, "F":349.2, "T":370.0, "G":392.0, "Y":415.3, "H":440.0, "U":466.2, "J":493.9};
 
-    <script src="script.js"></script>
+        function startApp() {
+            context = new (window.AudioContext || window.webkitAudioContext)();
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function play(id) {
+            if(!context) return;
+            const keyEl = document.getElementById('key-' + id);
+            if(!keyEl) return;
+
+            // Visual feedback
+            keyEl.classList.add('active');
+            setTimeout(() => keyEl.classList.remove('active'), 150);
+
+            // Audio synth
+            const osc = context.createOscillator();
+            const amp = context.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freqs[id], context.currentTime);
+            
+            amp.gain.setValueAtTime(0.5, context.currentTime);
+            amp.gain.exponentialRampToValueAtTime(0.001, context.currentTime + 0.8);
+
+            osc.connect(amp);
+            amp.connect(context.destination);
+            osc.start();
+            osc.stop(context.currentTime + 0.8);
+        }
+
+        // Keyboard Listener
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toUpperCase();
+            if(freqs[key]) play(key);
+        });
+
+        // Touch/Mouse Listener
+        document.querySelectorAll('.key').forEach(k => {
+            k.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                play(k.getAttribute('data-key'));
+            });
+        });
+    </script>
 </body>
 </html>
